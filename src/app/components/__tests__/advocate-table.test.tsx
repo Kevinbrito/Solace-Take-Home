@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe } from 'node:test';
 import '@testing-library/jest-dom';
 import { advocateData } from '@/db/seed/advocates';
-import AdvocateTable from '../Table/advocate-table';
+import AdvocateTable from '../table/advocate-table';
 
 describe('AdvocateTable component', () => {
     it('Renders the table based on advocate data', () => {
