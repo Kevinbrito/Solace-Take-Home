@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Advocate } from '@/app/type';
 
 interface TableProps {
@@ -24,18 +24,18 @@ export default function AdvocateTable({ filteredAdvocates }: TableProps) {
         <tbody>
           {filteredAdvocates.map((advocate: Advocate, index) => {
             return (
-              <tr>
-                <td >{advocate.firstName}</td>
-                <td >{advocate.lastName}</td>
-                <td >{advocate.city}</td>
-                <td >{advocate.degree}</td>
-                <td>
+              <tr key={index} className={index % 2 === 0 ? "bg-green-900 text-white" : "bg-white"}>
+                <td key={`${advocate.id}-firstName-${index}`} className="border">{advocate.firstName}</td>
+                <td key={`${advocate.id}-lastName-${index}`} className="border">{advocate.lastName}</td>
+                <td key={`${advocate.id}-city-${index}`} className="border">{advocate.city}</td>
+                <td key={`${advocate.id}-degree-${index}`} className="border">{advocate.degree}</td>
+                <td key={`${advocate.id}-specialties-${index}`} className="border">
                   {advocate.specialties.map((s: string) => (
                     <div key={`${advocate.id}-${s}`}>{s}</div>
                   ))}
                 </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
+                <td key={`${advocate.id}-yearsOfExperience-${index}`} className="border">{advocate.yearsOfExperience}</td>
+                <td key={`${advocate.id}-phoneNumber-${index}`} className="border">{advocate.phoneNumber}</td>
               </tr>
             );
           })}
