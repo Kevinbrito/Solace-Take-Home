@@ -1,35 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Advocate } from "./type";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<Advocate[]>([]);
+  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterSelected, setFilterSelected] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
+    fetch(`/api/advocates`).then((response) => {
       response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
+        setAdvocates(jsonResponse.data)
+      }).catch(error => {
+        console.error("Error calling the filter endpoint: ", error)
       });
     });
   }, []);
 
-  const onChange = (e) => {
-    const searchTerm = e.target.value;
+  useEffect(() => {
+    if (filterSelected) {
+    fetch(`/api/filter?filter=${selectedValue}&searchTerm=${searchTerm}`).then((response) => {
+      response.json().then((jsonResponse) => {
+        setFilteredAdvocates(jsonResponse.data);
+        }).catch(error => {
+          console.error("Error calling the filter endpoint: ", error)
+        });
+      });
+    }
+  }, [selectedValue, searchTerm]);
 
-    document.getElementById("search-term").innerHTML = searchTerm;
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
 
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
+
+    const filteredAdvocates = advocates.filter((advocate: Advocate) => {
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.firstName.toLowerCase().includes(searchTerm) ||
+        advocate.lastName.toLowerCase().includes(searchTerm) ||
+        advocate.city.toLowerCase().includes(searchTerm) ||
+        advocate.degree.toLowerCase().includes(searchTerm) ||
+        advocate.yearsOfExperience >= Number(searchTerm) ||
+        advocate.phoneNumber.includes(searchTerm)
       );
     });
 
@@ -37,8 +52,11 @@ export default function Home() {
   };
 
   const onClick = () => {
-    console.log(advocates);
     setFilteredAdvocates(advocates);
+    setSelectedValue('');
+    setFilterSelected(false)
+    setSearchTerm('')
+    document.getElementById('search-term').value = ''
   };
 
   return (
@@ -58,6 +76,7 @@ export default function Home() {
       <br />
       <table>
         <thead>
+          <tr>
           <th>First Name</th>
           <th>Last Name</th>
           <th>City</th>
@@ -65,9 +84,10 @@ export default function Home() {
           <th>Specialties</th>
           <th>Years of Experience</th>
           <th>Phone Number</th>
+          </tr>
         </thead>
         <tbody>
-          {filteredAdvocates.map((advocate) => {
+          {advocates.map((advocate) => {
             return (
               <tr>
                 <td>{advocate.firstName}</td>
