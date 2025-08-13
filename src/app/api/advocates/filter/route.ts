@@ -1,5 +1,5 @@
-import db from "../../../db";
-import { advocates } from "../../../db/schema";
+import db from "@/db";
+import { advocates } from "@/db/schema";
 import { gte, ilike, sql } from "drizzle-orm";
 
 export async function GET(
