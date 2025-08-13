@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Advocate } from "./type";
+import RadioButtons from "./components/radio-buttons/radio-buttons";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -59,6 +60,11 @@ export default function Home() {
     document.getElementById('search-term').value = ''
   };
 
+  const handleRadioButtonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(e.target.value);
+    setFilterSelected(true)
+  }
+
   return (
     <main style={{ margin: "24px" }}>
       <h1>Solace Advocates</h1>
@@ -70,7 +76,9 @@ export default function Home() {
           Searching for: <span id="search-term"></span>
         </p>
         <input style={{ border: "1px solid black" }} onChange={onChange} />
+        
         <button onClick={onClick}>Reset Search</button>
+        <span className="flex gap-1">Filter by: <RadioButtons handleChange={handleRadioButtonChange} selectedValue={selectedValue} /></span>
       </div>
       <br />
       <br />
