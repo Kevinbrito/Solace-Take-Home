@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Advocate } from "./type";
 import RadioButtons from "./components/radio-buttons/radio-buttons";
 import AdvocateTable from "./components/table/advocate-table";
+import ReusableButton from "./components/CTAs/reusable-button";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -68,7 +69,8 @@ export default function Home() {
 
   return (
     <main style={{ margin: "24px" }}>
-      <input id="search-term" className="border" onChange={onChange} />
+      <input id="search-term" className="border" onChange={onChange} /> 
+      <div> <ReusableButton onClick={onClick} copy="Reset Search" /></div>
       <span className="flex gap-1">Filter by: <RadioButtons handleChange={handleRadioButtonChange} selectedValue={selectedValue} /></span>
       <AdvocateTable filteredAdvocates={filteredAdvocates.length > 0 ? filteredAdvocates : advocates}/>
     </main>
